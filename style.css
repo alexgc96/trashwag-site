@@ -26,7 +26,54 @@ body {
   background: #000;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
+
+.header-contact svg {
+  width: 22px;
+  height: 22px;
+  stroke: rgba(255, 255, 255, 0.6);
+  fill: none;
+  stroke-width: 1.5;
+  transition: stroke 0.2s;
+}
+.header-contact:hover svg { stroke: #fff; }
+
+/* ── TOC ── */
+.toc {
+  position: fixed;
+  left: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  opacity: 0;
+  animation-name: heroTextIn;
+  animation-duration: 1s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  animation-delay: 4.5s;
+}
+
+.toc ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.toc a {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.35);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.toc a:hover,
+.toc a.toc-active { color: #fff; }
+
+@media (max-width: 768px) { .toc { display: none; } }
 
 .wordmark {
   font-family: 'UnifrakturMaguntia', cursive;
@@ -42,7 +89,7 @@ body {
   position: relative;
   width: 100%;
   height: 100vh;
-  background: #000;
+  background: #000000ff;
   overflow: hidden;
 }
 
@@ -51,6 +98,31 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
+  z-index: 0;
+}
+
+.hero-tagline {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
+  letter-spacing: 0.25em;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  opacity: 0;
+  animation-name: heroTextIn;
+  animation-duration: 1.5s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  animation-delay: 4.3s;
+}
+
+@keyframes heroTextIn {
+  to { opacity: 1; }
 }
 
 /* ── Sections ── */
@@ -90,4 +162,16 @@ body {
   text-shadow:
     2px 2px 0 #000,
     3px 3px 0 #111;
+}
+
+/* ── Section reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
