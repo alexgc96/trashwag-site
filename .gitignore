@@ -24,3 +24,6 @@ composer.lock
 node_modules/
 dist/
 .cache/
+
+# Local notes
+docs/
