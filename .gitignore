@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# PHP (future)
+vendor/
+composer.lock
+.env
+.env.local
+*.log
+
+# Build / cache
+node_modules/
+dist/
+.cache/
