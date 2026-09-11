@@ -273,11 +273,11 @@
   }, { passive: true });
 
   // ── Mini constellations (blog columns) ──────────────────────────────────────
-  function initMini(canvasId, stars, edges) {
+  function initMini(canvasId, stars, edges, stageAspect) {
     const c = document.getElementById(canvasId);
     if (!c) return;
     const x = c.getContext('2d');
-    const PAD = 0.12;
+    const PAD = 0.04;
 
     const bg = Array.from({ length: 25 }, () => ({
       nx: Math.random(), ny: Math.random(),
@@ -287,8 +287,16 @@
 
     function resizeMini() { c.width = c.offsetWidth; c.height = c.offsetHeight; }
 
-    const px = nx => (PAD + nx * (1 - 2 * PAD)) * c.width;
-    const py = ny => (PAD + ny * (1 - 2 * PAD)) * c.height;
+    function getStage() {
+      const ca = c.width / c.height;
+      let w, h;
+      if (ca > stageAspect) {
+        h = c.height * (1 - 2 * PAD); w = h * stageAspect;
+      } else {
+        w = c.width  * (1 - 2 * PAD); h = w / stageAspect;
+      }
+      return { w, h, x: (c.width - w) / 2, y: (c.height - h) / 2 };
+    }
 
     let t0 = null;
     function draw(ts) {
@@ -298,6 +306,9 @@
 
       const dx = Math.sin(t * 0.0003) * 2;
       const dy = Math.cos(t * 0.00025) * 1.5;
+      const st = getStage();
+      const px = (nx) => st.x + nx * st.w;
+      const py = (ny) => st.y + ny * st.h;
 
       bg.forEach(s => {
         x.beginPath();
@@ -335,40 +346,172 @@
     requestAnimationFrame(draw);
   }
 
+  // Libra — 6 stars, tall narrow shape (aspect ~0.35)
   initMini('blog-canvas-libra', [
-    { nx: 0.20, ny: 0.35, r: 2.5 },
-    { nx: 0.62, ny: 0.20, r: 3.0 },
-    { nx: 0.46, ny: 0.55, r: 2.0 },
-    { nx: 0.75, ny: 0.58, r: 2.0 },
-    { nx: 0.14, ny: 0.78, r: 2.0 },
-  ], [[0,1],[0,2],[2,3],[0,4]]);
+    { nx: 0.49, ny: 0.13, r: 3.0 }, // 0 β Lib Zubeneschamali (top apex)
+    { nx: 0.37, ny: 0.35, r: 2.5 }, // 1 α Lib Zubenelgenubi (mid-left)
+    { nx: 0.63, ny: 0.43, r: 2.5 }, // 2 γ Lib (mid-right)
+    { nx: 0.55, ny: 0.67, r: 2.0 }, // 3 ι Lib (lower-right)
+    { nx: 0.38, ny: 0.80, r: 2.0 }, // 4 σ Lib (lower-left)
+    { nx: 0.37, ny: 0.93, r: 2.0 }, // 5 bottom star
+  ], [[0,1],[0,2],[1,2],[1,4],[2,3],[4,5]], 0.35);
 
+  // Gemini — 15 stars, square-ish (aspect ~0.75)
   initMini('blog-canvas-gemini', [
-    { nx: 0.28, ny: 0.08, r: 2.5 },
-    { nx: 0.62, ny: 0.12, r: 3.0 },
-    { nx: 0.20, ny: 0.33, r: 2.0 },
-    { nx: 0.16, ny: 0.58, r: 2.0 },
-    { nx: 0.10, ny: 0.85, r: 2.0 },
-    { nx: 0.70, ny: 0.80, r: 2.0 },
-    { nx: 0.65, ny: 0.55, r: 2.0 },
-    { nx: 0.58, ny: 0.36, r: 2.0 },
-  ], [[0,1],[0,2],[2,3],[3,4],[1,7],[7,6],[6,5]]);
+    { nx: 0.66, ny: 0.08, r: 3.0 }, // 0  β Gem Pollux (top-right, brightest)
+    { nx: 0.54, ny: 0.20, r: 2.5 }, // 1  upper junction
+    { nx: 0.46, ny: 0.13, r: 2.5 }, // 2  α Gem Castor (top-left)
+    { nx: 0.38, ny: 0.29, r: 2.0 }, // 3  left cluster
+    { nx: 0.29, ny: 0.37, r: 2.0 }, // 4  far-left
+    { nx: 0.46, ny: 0.33, r: 2.5 }, // 5  mid junction (μ Gem)
+    { nx: 0.59, ny: 0.38, r: 2.0 }, // 6  right branch (δ Gem)
+    { nx: 0.68, ny: 0.42, r: 2.0 }, // 7  far-right junction
+    { nx: 0.78, ny: 0.37, r: 2.0 }, // 8  right fork A
+    { nx: 0.88, ny: 0.38, r: 2.0 }, // 9  right fork B
+    { nx: 0.69, ny: 0.53, r: 2.0 }, // 10 right-down
+    { nx: 0.44, ny: 0.47, r: 2.0 }, // 11 lower body
+    { nx: 0.43, ny: 0.63, r: 2.0 }, // 12 lower (η Gem)
+    { nx: 0.50, ny: 0.87, r: 2.0 }, // 13 bottom (γ Gem)
+    { nx: 0.64, ny: 0.73, r: 2.0 }, // 14 lower-right
+  ], [
+    [0,1],[1,2],[1,5],[5,3],[3,4],
+    [5,6],[6,7],[7,8],[8,9],[7,10],
+    [5,11],[11,12],[12,13],[10,14],[14,13]
+  ], 0.75);
 
+  // Scorpius — 16 stars, stinger top-right + claw box lower-left (aspect ~0.72)
   initMini('blog-canvas-scorpio', [
-    { nx: 0.08, ny: 0.28, r: 2.0 },
-    { nx: 0.16, ny: 0.20, r: 2.0 },
-    { nx: 0.22, ny: 0.35, r: 2.0 },
-    { nx: 0.18, ny: 0.48, r: 3.5 },
-    { nx: 0.26, ny: 0.58, r: 2.0 },
-    { nx: 0.36, ny: 0.65, r: 2.0 },
-    { nx: 0.48, ny: 0.70, r: 2.0 },
-    { nx: 0.60, ny: 0.72, r: 2.0 },
-    { nx: 0.70, ny: 0.65, r: 2.0 },
-    { nx: 0.78, ny: 0.52, r: 2.0 },
-    { nx: 0.84, ny: 0.38, r: 2.0 },
-    { nx: 0.82, ny: 0.24, r: 2.5 },
-    { nx: 0.76, ny: 0.15, r: 2.5 },
-  ], [[0,1],[0,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,12]]);
+    { nx: 0.67, ny: 0.12, r: 2.5 }, // 0  λ Sco Shaula (stinger tip)
+    { nx: 0.72, ny: 0.20, r: 2.0 }, // 1  υ Sco (stinger fork)
+    { nx: 0.70, ny: 0.27, r: 2.0 }, // 2  κ Sco (stinger base)
+    { nx: 0.63, ny: 0.30, r: 2.0 }, // 3  ι Sco
+    { nx: 0.57, ny: 0.34, r: 2.0 }, // 4  θ Sco
+    { nx: 0.52, ny: 0.37, r: 2.0 }, // 5  η Sco
+    { nx: 0.49, ny: 0.40, r: 2.0 }, // 6  μ Sco
+    { nx: 0.49, ny: 0.44, r: 2.0 }, // 7  ε Sco
+    { nx: 0.48, ny: 0.49, r: 3.5 }, // 8  α Sco Antares (brightest)
+    { nx: 0.44, ny: 0.55, r: 2.0 }, // 9  τ Sco
+    { nx: 0.42, ny: 0.62, r: 2.0 }, // 10 σ Sco
+    { nx: 0.36, ny: 0.64, r: 2.0 }, // 11 π Sco (claw upper-right)
+    { nx: 0.27, ny: 0.63, r: 2.0 }, // 12 ρ Sco (claw upper-left)
+    { nx: 0.24, ny: 0.71, r: 2.0 }, // 13 δ Sco
+    { nx: 0.26, ny: 0.79, r: 2.0 }, // 14 ω Sco (claw lower-left)
+    { nx: 0.34, ny: 0.80, r: 2.0 }, // 15 ω² Sco (claw bottom)
+  ], [
+    [0,2],[1,2],
+    [2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],
+    [10,11],[11,12],[12,13],[13,14],[14,15],[15,11]
+  ], 0.72);
+
+  // ── Section star fields (white sections, right side, 45° diagonal) ─────────
+  const SECTION_STAR_DEFS = [
+    { nx: 0.88, ny: 0.06, r: 7   },
+    { nx: 0.70, ny: 0.13, r: 3.5 },
+    { nx: 0.95, ny: 0.20, r: 4.5 },
+    { nx: 0.76, ny: 0.29, r: 6   },
+    { nx: 0.58, ny: 0.36, r: 3   },
+    { nx: 0.91, ny: 0.42, r: 4   },
+    { nx: 0.66, ny: 0.50, r: 8   },
+    { nx: 0.82, ny: 0.58, r: 3.5 },
+    { nx: 0.54, ny: 0.64, r: 5   },
+    { nx: 0.78, ny: 0.72, r: 3   },
+    { nx: 0.62, ny: 0.80, r: 6.5 },
+    { nx: 0.86, ny: 0.87, r: 3.5 },
+    { nx: 0.50, ny: 0.93, r: 4   },
+  ];
+
+  function drawSparkle(ctx, x, y, r) {
+    const inner = r * 0.18;
+    ctx.beginPath();
+    for (let i = 0; i < 8; i++) {
+      const a = (i * Math.PI / 4) - Math.PI / 4;
+      const rad = i % 2 === 0 ? r : inner;
+      i === 0 ? ctx.moveTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad)
+              : ctx.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad);
+    }
+    ctx.closePath();
+  }
+
+  function initSectionStars(canvasId) {
+    const c = document.getElementById(canvasId);
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    function resizeStars() { c.width = c.offsetWidth; c.height = c.offsetHeight; }
+
+    let t0 = null;
+    function draw(ts) {
+      if (!t0) t0 = ts;
+      const t = ts - t0;
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      SECTION_STAR_DEFS.forEach((s, i) => {
+        const px    = s.nx * c.width;
+        const py    = s.ny * c.height;
+        const pulse = 1 + Math.sin(t * 0.0007 + i * 1.3) * 0.12;
+        drawSparkle(ctx, px, py, s.r * pulse);
+        ctx.fillStyle = '#000';
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resizeStars);
+    resizeStars();
+    requestAnimationFrame(draw);
+  }
+
+  initSectionStars('stars-about');
+  initSectionStars('stars-services');
+  initSectionStars('stars-contact');
+
+  // ── Moon phase canvases (white sections) ───────────────────────────────────
+  // phase: 0=new, 0.5=half, 1=full
+  function initMoon(canvasId, phase) {
+    const c = document.getElementById(canvasId);
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    function resizeMoon() { c.width = c.offsetWidth; c.height = c.offsetHeight; }
+
+    let t0 = null;
+    function draw(ts) {
+      if (!t0) t0 = ts;
+      const t = ts - t0;
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      const r   = Math.min(c.width, c.height) * 0.38;
+      const cx  = c.width  / 2;
+      const cy  = c.height / 2;
+      const rr  = r * (1 + Math.sin(t * 0.0008) * 0.012);
+
+      // Draw shadow-side shape filled black; lit side left transparent
+      const isWaxing = phase <= 0.5;
+      const eRx = Math.abs((isWaxing ? 0.5 - phase : phase - 0.5) * 2) * rr;
+
+      ctx.beginPath();
+      if (isWaxing) {
+        ctx.arc(cx, cy, rr, -Math.PI / 2, Math.PI / 2, false);
+        ctx.ellipse(cx, cy, eRx, rr, 0, Math.PI / 2, -Math.PI / 2, true);
+      } else {
+        ctx.arc(cx, cy, rr, Math.PI / 2, -Math.PI / 2, false);
+        ctx.ellipse(cx, cy, eRx, rr, 0, -Math.PI / 2, Math.PI / 2, true);
+      }
+      ctx.fillStyle = '#000';
+      ctx.fill();
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resizeMoon);
+    resizeMoon();
+    requestAnimationFrame(draw);
+  }
+
+  initMoon('moon-about',    0.15); // waxing crescent
+  initMoon('moon-services', 0.72); // waxing gibbous
+  initMoon('moon-contact',  0.88); // waning crescent
 
   resize();
   requestAnimationFrame(drawFrame);
