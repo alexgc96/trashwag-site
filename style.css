@@ -1,0 +1,85 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --font-display: Impact, 'Arial Narrow', 'Haettenschweiler', sans-serif;
+  --font-body: 'Arial', sans-serif;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: var(--font-body);
+}
+
+/* ── Header ── */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 16px 10%;
+  background: #000;
+  display: flex;
+  align-items: center;
+}
+
+.wordmark {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: #fff;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  line-height: 1;
+}
+
+/* ── Hero ── */
+.hero {
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  padding-top: 80px;
+}
+
+/* ── Sections ── */
+.section {
+  width: 100%;
+  padding: 80px 10%;
+}
+
+.section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  line-height: 1;
+}
+
+.section p {
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: 1.7;
+  max-width: 70ch;
+}
+
+/* ── Black section ── */
+.bg-black {
+  background: #000;
+  color: #fff;
+}
+
+/* ── White section — white text + shadow ── */
+.bg-white {
+  background: #aab7c1ff;
+  color: #fff;
+}
+
+.bg-white h2,
+.bg-white p {
+  text-shadow:
+    2px 2px 0 #000,
+    3px 3px 0 #111;
+}
